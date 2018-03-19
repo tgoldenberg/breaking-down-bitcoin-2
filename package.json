@@ -1,0 +1,46 @@
+{
+  "name": "nodecoin",
+  "version": "1.0.0",
+  "description": "Implementation of Bitcoin protocol in JavaScript",
+  "main": "index.js",
+  "keywords": [
+    "Bitcoin"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node build/nodecoin",
+    "dev": "WEBPACK_ENV=dev webpack --progress --colors --watch",
+    "build": "WEBPACK_ENV=production webpack --optimize-minimize"
+  },
+  "author": "tgoldenberg",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
+    "body-parser": "^1.18.2",
+    "bs58": "^4.0.1",
+    "coinstring": "^2.3.0",
+    "colors": "^1.2.1",
+    "crypto": "^1.0.1",
+    "dotenv": "^5.0.1",
+    "elliptic": "^6.4.0",
+    "express": "^4.16.3",
+    "js-sha256": "^0.9.0",
+    "lodash": "^4.17.5",
+    "mongoose": "^5.0.10",
+    "network": "^0.4.1",
+    "pusher-js": "^4.2.2",
+    "redux": "^3.7.2",
+    "ripemd160": "^2.0.1",
+    "secure-random": "^1.1.1",
+    "uuid": "^3.2.1",
+    "webpack": "^4.1.1"
+  },
+  "devDependencies": {
+    "babel-loader": "^7.1.4",
+    "babel-plugin-module-resolver": "^3.1.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "webpack-cli": "^2.0.12"
+  }
+}
