@@ -97,7 +97,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! babel-polyfill */ \"babel-polyfill\");\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(babel_polyfill__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _utils_verifySignature__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/verifySignature */ \"./src/utils/verifySignature.js\");\n/* harmony import */ var _mocks_blocks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../__mocks__/blocks */ \"./__mocks__/blocks.js\");\n/* harmony import */ var _utils_makeWallet__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/makeWallet */ \"./src/utils/makeWallet.js\");\n\n\n\n\n\n\n\nObject(_utils_makeWallet__WEBPACK_IMPORTED_MODULE_3__[\"makeWallet\"])();\n\nlet message = \"94887ccfc3c07b8747f82a3f1d8f102ac22eaf10c36b8f89193758fb3dbe5bb9\";\nlet privKey = \"206ca46fc50158ebd083830aa770ff3eb0fa4233fc40126fa9b551cc3d924450\";\nconsole.log('> Signing tx...');\nconsole.log(Object(_utils_verifySignature__WEBPACK_IMPORTED_MODULE_1__[\"unlockTransaction\"])(message, privKey));\n\nlet address = \"1Lsosn3fnmrwuyhSEUEUbcX41NFrgCErHG\";\nlet pubKey = \"04152cdb8558c9d36d08e1b431eba2320c3199c1cf9fa9d284732dcdfb054b33e4888a30af5541e06bfb81a7f1638087cff37d09bc00cb831b809b09360cf3384e\";\nlet signature = \"3045022100c89d0052968612143ae4d0947efd89b492e4dc1f9d45c3a783a653e11c00f42602200e61c01e29b843d6a783d83a157e32c5d0d6dcc3bc909f2d2ebb162b86a362ab\";\n\nconsole.log('> Verifying tx...');\nconsole.log(Object(_utils_verifySignature__WEBPACK_IMPORTED_MODULE_1__[\"verifyUnlock\"])(message, address, pubKey, signature));\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! babel-polyfill */ \"babel-polyfill\");\n/* harmony import */ var babel_polyfill__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(babel_polyfill__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _utils_verifySignature__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/verifySignature */ \"./src/utils/verifySignature.js\");\n/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! express */ \"express\");\n/* harmony import */ var express__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(express__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! pusher-js */ \"pusher-js\");\n/* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _mocks_blocks__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../__mocks__/blocks */ \"./__mocks__/blocks.js\");\n/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! body-parser */ \"body-parser\");\n/* harmony import */ var body_parser__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(body_parser__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var _utils_makeWallet__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils/makeWallet */ \"./src/utils/makeWallet.js\");\n/* harmony import */ var net__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! net */ \"net\");\n/* harmony import */ var net__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(net__WEBPACK_IMPORTED_MODULE_7__);\n/* harmony import */ var network__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! network */ \"network\");\n/* harmony import */ var network__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(network__WEBPACK_IMPORTED_MODULE_8__);\nlet handleConnection = (() => {\n  var _ref3 = _asyncToGenerator(function* (conn) {\n    console.log('> New client connection from : ', conn.remoteAddress, conn.remotePort);\n    conn.setEncoding('utf8');\n    conn.on('data', function (data) {\n      console.log('> Received data: ', data);\n    });\n  });\n\n  return function handleConnection(_x2) {\n    return _ref3.apply(this, arguments);\n  };\n})();\n\nlet connectWithPeer = (() => {\n  var _ref4 = _asyncToGenerator(function* (ip, port) {\n    const client = new net__WEBPACK_IMPORTED_MODULE_7___default.a.Socket();\n\n    client.connect(port, ip, function () {\n      console.log('> Connected to peer: ', ip, port);\n      client.write('VERSION 1 00000244a5bae572247ca9f5b9149fc3980fa90a7a70cd35030a29d81ebc88ea');\n    });\n  });\n\n  return function connectWithPeer(_x3, _x4) {\n    return _ref4.apply(this, arguments);\n  };\n})();\n\nfunction _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step(\"next\", value); }, function (err) { step(\"throw\", err); }); } } return step(\"next\"); }); }; }\n\n\n\n\n\n\n\n\n\n\n\n\n\nconst PUSHER_APP_KEY = '86e36fb6cb404d67a108';\nconst MAX_PEERS = 25;\n\nconst app = express__WEBPACK_IMPORTED_MODULE_2___default()();\napp.use(body_parser__WEBPACK_IMPORTED_MODULE_5___default.a.json());\napp.use(body_parser__WEBPACK_IMPORTED_MODULE_5___default.a.urlencoded({ extended: false }));\n\napp.listen(process.env.PORT || 3000, _asyncToGenerator(function* () {\n  console.log('> App server running on port: ', process.env.PORT);\n  // get public IP address\n  const ipAddr = yield getIPAddress();\n  // connect to Pusher server and get list of connected IP addresses\n  const pusher = new pusher_js__WEBPACK_IMPORTED_MODULE_3___default.a(PUSHER_APP_KEY, {\n    auth: { params: { ip_addr: ipAddr, port: 8334 } },\n    cluster: 'us2',\n    // authEndpoint: 'http://localhost:3001/pusher/auth',\n    authEndpoint: 'https://pusher-presence-auth.herokuapp.com/pusher/auth',\n    encrypted: true\n  });\n\n  const channel = pusher.subscribe('presence-node-coin');\n\n  channel.bind('pusher:subscription_succeeded', (() => {\n    var _ref2 = _asyncToGenerator(function* (members) {\n      console.log('> pusher:subscription_succeeded: ', members);\n      let peers = [];\n      channel.members.each(function ({ id }) {\n        if (id !== ipAddr) {\n          peers.push(id);\n        }\n      });\n      // only connect to a max of 25 peers\n      for (let i = 0; i < Math.min(MAX_PEERS, peers.length); i++) {\n        // connect with peer\n        yield connectWithPeer(peers[i], 8334);\n      }\n    });\n\n    return function (_x) {\n      return _ref2.apply(this, arguments);\n    };\n  })());\n\n  // for each node, establish TCP/IP connection and send VERSION message\n  const tcpServer = net__WEBPACK_IMPORTED_MODULE_7___default.a.createServer();\n  tcpServer.on('connection', handleConnection);\n  tcpServer.listen(8334, '0.0.0.0', function () {\n    console.log('> TCP/IP server listening on: ', tcpServer.address());\n  });\n}));\n\nfunction getIPAddress() {\n  return new Promise((resolve, reject) => {\n    network__WEBPACK_IMPORTED_MODULE_8___default.a.get_public_ip((err, ip) => {\n      if (err) {\n        reject(err);\n      }\n      resolve(ip);\n    });\n  });\n}\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ }),
 
@@ -136,6 +136,17 @@ eval("module.exports = require(\"babel-polyfill\");\n\n//# sourceURL=webpack:///
 
 /***/ }),
 
+/***/ "body-parser":
+/*!******************************!*\
+  !*** external "body-parser" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"body-parser\");\n\n//# sourceURL=webpack:///external_%22body-parser%22?");
+
+/***/ }),
+
 /***/ "bs58":
 /*!***********************!*\
   !*** external "bs58" ***!
@@ -169,6 +180,17 @@ eval("module.exports = require(\"elliptic\");\n\n//# sourceURL=webpack:///extern
 
 /***/ }),
 
+/***/ "express":
+/*!**************************!*\
+  !*** external "express" ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"express\");\n\n//# sourceURL=webpack:///external_%22express%22?");
+
+/***/ }),
+
 /***/ "js-sha256":
 /*!****************************!*\
   !*** external "js-sha256" ***!
@@ -177,6 +199,39 @@ eval("module.exports = require(\"elliptic\");\n\n//# sourceURL=webpack:///extern
 /***/ (function(module, exports) {
 
 eval("module.exports = require(\"js-sha256\");\n\n//# sourceURL=webpack:///external_%22js-sha256%22?");
+
+/***/ }),
+
+/***/ "net":
+/*!**********************!*\
+  !*** external "net" ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"net\");\n\n//# sourceURL=webpack:///external_%22net%22?");
+
+/***/ }),
+
+/***/ "network":
+/*!**************************!*\
+  !*** external "network" ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"network\");\n\n//# sourceURL=webpack:///external_%22network%22?");
+
+/***/ }),
+
+/***/ "pusher-js":
+/*!****************************!*\
+  !*** external "pusher-js" ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = require(\"pusher-js\");\n\n//# sourceURL=webpack:///external_%22pusher-js%22?");
 
 /***/ }),
 
