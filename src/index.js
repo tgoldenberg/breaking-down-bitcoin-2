@@ -1,7 +1,5 @@
 import 'babel-polyfill';
 
-async function makeWallet() {
-  console.log('Hello world');
-}
+import { makeWallet } from 'utils/makeWallet';
 
 makeWallet();
