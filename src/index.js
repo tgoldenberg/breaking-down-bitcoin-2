@@ -2,13 +2,16 @@ import 'babel-polyfill';
 
 import { unlockTransaction, verifyUnlock } from 'utils/verifySignature';
 
+import BlockModel from 'models/Block';
 import Express from 'express';
 import Pusher from 'pusher-js';
 import { blocks } from '__mocks__/blocks';
 import bodyParser from 'body-parser';
+import { connectToDB } from 'db/connectToDB';
 import { makeWallet } from 'utils/makeWallet';
 import net from 'net';
 import network from 'network';
+import store from 'store/store';
 
 const PUSHER_APP_KEY = '86e36fb6cb404d67a108';
 const MAX_PEERS = 25;
@@ -19,6 +22,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.listen(process.env.PORT || 3000, async function() {
   console.log('> App server running on port: ', process.env.PORT);
+  // sync to MongoDB
+  const connectedToDB = await connectToDB();
+  console.log('> Successfully connected to local MongoDB: ', connectedToDB);
+  // load blocks
+  let blocks = await BlockModel.find({ });
+  console.log('> Saved blocks: ', blocks);
+  // call SET_INITIAL_BLOCKS
+
   // get public IP address
   const ipAddr = await getIPAddress();
   // connect to Pusher server and get list of connected IP addresses
