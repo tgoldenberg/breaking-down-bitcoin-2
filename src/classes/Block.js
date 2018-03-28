@@ -26,7 +26,7 @@ const GENESIS_TX = {
 export default class Block {
   constructor(header, txs, isGenesis = false) {
     this.header = isGenesis ? GENESIS_HEADER: header;
-    this.hash = this.getBlockHash(this.header);
+    this.hash = this.getBlockHash(this.header, this.header.nonce);
     txs = isGenesis ? [ GENESIS_TX ] : txs;
     this.txs = [ ];
     for (let i = 0; i < txs.length; i++) {
@@ -35,8 +35,8 @@ export default class Block {
     this.setBlocksize();
     console.log(this);
   }
-  getBlockHash() {
-    return SHA256('' + this.version + this.previousHash + this.merkleHash + this.timestamp + this.difficulty + this.nonce);
+  getBlockHash(header, nonce) {
+    return SHA256('' + header.version + header.previousHash + header.merkleHash + header.timestamp + header.difficulty + nonce);
   }
   getDBFormat() {
     return {
@@ -58,7 +58,7 @@ export default class Block {
   }
   setHeader(header) {
     this.header = header;
-    this.hash = this.getBlockHash();
+    this.hash = this.getBlockHash(this.header, this.header.nonce);
     this.adjustTxids();
   }
   setBlocksize() {
@@ -73,7 +73,24 @@ export default class Block {
     }
     this.txs = newTxs;
   }
+  setNonce(nonce) {
+    this.header.nonce = nonce;
+    this.hash = this.getBlockHash(this.header, nonce);
+  }
   findCorrectNonce() {
-    // TODO
+    // find correct nonce
+    const target = Math.pow(2, 256 - this.header.difficulty);
+    let nonce = this.header.nonce;
+
+    console.log('> Solving for block nonce...', this.header, this.hash);
+    while (parseInt(this.getBlockHash(this.header, nonce), 16) > target) {
+      if (nonce % 1000000 === 0) {
+        console.log('> New nonce: ', nonce, this.getBlockHash(this.header, nonce));
+      }
+      nonce++;
+    }
+    this.setNonce(nonce);
+    this.adjustTxids();
+    return this.header.nonce;
   }
 }

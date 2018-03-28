@@ -5,6 +5,7 @@ import { unlockTransaction, verifyUnlock } from 'utils/verifySignature';
 import BlockModel from 'models/Block';
 import Express from 'express';
 import Pusher from 'pusher-js';
+import { areBlocksValid } from 'utils/validateBlock';
 import { blocks } from '__mocks__/blocks';
 import bodyParser from 'body-parser';
 import { connectToDB } from 'db/connectToDB';
@@ -28,8 +29,10 @@ app.listen(process.env.PORT || 3000, async function() {
   console.log('> Successfully connected to local MongoDB: ', connectedToDB);
   // load blocks
   let blocks = await BlockModel.find({ });
-  console.log('> Saved blocks: ', blocks);
-  if (blocks.length < 100) {
+  // console.log('> Saved blocks: ', blocks);
+  const valid = await areBlocksValid(blocks);
+  console.log('> Valid blocks: ', blocks.length);
+  if (!valid) {
     blocks = await seedBlocks();
     console.log('> Blocks: ', blocks);
   }

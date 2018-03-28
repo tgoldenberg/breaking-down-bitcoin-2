@@ -64,9 +64,9 @@ function createPubKeyHash(publicKey) {
 export function verifyUnlock(msg, address, publicKey, signature) {
   try {
     // verify that public address matches public key
-    console.log('> verify unlock params: ', msg, address, publicKey, signature);
+    // console.log('> verify unlock params: ', msg, address, publicKey, signature);
     const publicKeyHash = createPubKeyHash(publicKey);
-    console.log('> Pub key hash: ', publicKeyHash);
+    // console.log('> Pub key hash: ', publicKeyHash);
     const isAddress = createPublicAddress(publicKeyHash) === address;
     if (!isAddress) {
       console.log('> wrong address: ', isAddress);

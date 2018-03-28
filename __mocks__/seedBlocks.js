@@ -11,7 +11,7 @@ const uuid = v1;
 const uuidOptions = {
   node: [0x01, 0x23, 0x45, 0x67, 0x89, 0xab],
   clockseq: 0x1234,
-  msecs: new Date('2011-11-01').getTime(),
+  msecs: new Date('2018-01-01').getTime(),
   nsecs: 5678
 };
 
@@ -67,7 +67,7 @@ export async function seedBlocks() {
       { scriptPubKey: myWallet.address, nValue: 45 * COIN }
     ]
   };
-  blk = new Block(header, [ cbTx, tx ], false);
+  blk = new Block(header, [ cbTx, tx ]);
   blk.findCorrectNonce();
   newBlock = new BlockModel(blk.getDBFormat());
   await newBlock.save();
@@ -81,7 +81,7 @@ export async function seedBlocks() {
  header = {
    version: 1,
    previousHash: newBlock.hash,
-   merkleHash: SHA256(uuid({...uuidOptions, msecs: ++uuidOptions.msecs })), // we use a random unique ID for now
+   merkleHash: SHA256(uuid({...uuidOptions, msecs: new Date('2018-01-02').getTime() })), // we use a random unique ID for now
    difficulty,
    nonce: 0,
    timestamp: new Date('2018-01-02').getTime(),
