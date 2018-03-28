@@ -1,5 +1,6 @@
 import 'babel-polyfill';
 
+import { DL, handleData } from 'utils/handleData';
 import { unlockTransaction, verifyUnlock } from 'utils/verifySignature';
 
 import BlockModel from 'models/Block';
@@ -59,11 +60,41 @@ app.listen(process.env.PORT || 3000, async function() {
         peers.push(id);
       }
     });
+    store.dispatch({ type: 'SET_PEERS', allPeers: peers.slice(0, MAX_PEERS) });
     // only connect to a max of 25 peers
     for (let i = 0; i < Math.min(MAX_PEERS, peers.length); i++) {
       // connect with peer
       await connectWithPeer(peers[i], 8334);
     }
+  });
+
+  // MEMBER REMOVED
+  channel.bind('pusher:member_removed', function(member) {
+    console.log('> pusher:member_removed: ', member);
+    let allPeers = store.getState().allPeers;
+    let newAllPeers = [ ];
+    allPeers.forEach(peer => {
+      if (peer.ip !== member.id) {
+        newAllPeers.push(peer);
+      }
+    });
+    store.dispatch({ type: 'SET_PEERS', allPeers: newAllPeers });
+  });
+
+  // MEMBER ADDED
+  channel.bind('pusher:member_added', function(member) {
+    console.log('> pusher:member_added: ', member);
+    let allPeers = store.getState().allPeers;
+    allPeers.push({ ip: member.id, connected: false, client: null, synced: false });
+    store.dispatch({ type: 'SET_PEERS', allPeers });
+    // wait 30 seconds before initiating reverse connection
+    setTimeout(async () => {
+      let allPeers = store.getState().allPeers;
+      let peer = find(allPeers, ({ ip }) => ip === member.id);
+      if (!peer || !peer.connected) {
+        await connectWithPeer(member.id, 8334);
+      }
+    }, 30 * 1000);
   });
 
   // for each node, establish TCP/IP connection and send VERSION message
@@ -77,9 +108,10 @@ app.listen(process.env.PORT || 3000, async function() {
 async function handleConnection(conn) {
   console.log('> New client connection from : ', conn.remoteAddress, conn.remotePort);
   conn.setEncoding('utf8');
-  conn.on('data', data => {
-    console.log('> Received data: ', data);
-  });
+  const ctx = { client: conn, isServer: true, ip: conn.remoteAddress };
+  store.dispatch({ type: 'CONNECT_PEER', client: conn, ip: conn.remoteAddress, port: conn.remotePort });
+  conn.on('data', handleData.bind(ctx));
+  conn.on('error', (err) => console.warn(err));
 }
 
 async function connectWithPeer(ip, port) {
@@ -87,8 +119,14 @@ async function connectWithPeer(ip, port) {
 
   client.connect(port, ip, () => {
     console.log('> Connected to peer: ', ip, port);
-    client.write('VERSION 1 00000244a5bae572247ca9f5b9149fc3980fa90a7a70cd35030a29d81ebc88ea');
-  })
+    store.dispatch({ type: 'CONNECT_PEER', ip, client, port });
+
+    let lastBlock = store.getState().lastBlock;
+    client.write(['VERSION', '1', lastBlock.hash].join(DL));
+  });
+  const ctx = { client, isServer: false, ip };
+  client.on('data', handleData.bind(ctx));
+  client.on('error', (err) => console.warn(err));
 }
 
 function getIPAddress() {

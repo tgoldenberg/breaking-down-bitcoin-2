@@ -46,6 +46,9 @@ export async function seedBlocks() {
   await newBlock.save();
   result.push(newBlock);
   console.log('> Genesis block saved: ', newBlock);
+  if (process.env.SEED_BLOCKS !== 'true') {
+    return [ newBlock ];
+  }
 
   // send 5 BTC to friend wallet
   header = {
