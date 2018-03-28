@@ -11,6 +11,7 @@ import { connectToDB } from 'db/connectToDB';
 import { makeWallet } from 'utils/makeWallet';
 import net from 'net';
 import network from 'network';
+import { seedBlocks } from '__mocks__/seedBlocks';
 import store from 'store/store';
 
 const PUSHER_APP_KEY = '86e36fb6cb404d67a108';
@@ -28,6 +29,10 @@ app.listen(process.env.PORT || 3000, async function() {
   // load blocks
   let blocks = await BlockModel.find({ });
   console.log('> Saved blocks: ', blocks);
+  if (blocks.length < 100) {
+    blocks = await seedBlocks();
+    console.log('> Blocks: ', blocks);
+  }
   // call SET_INITIAL_BLOCKS
 
   // get public IP address
