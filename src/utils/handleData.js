@@ -99,7 +99,7 @@ export async function handleData(data) {
       }
       // validate block
       let isValid = await isBlockValid(block, lastBlock, false);
-      console.log('> new block - is valid: ', block, lastBlock);
+      console.log('> new block - is valid: ', block, lastBlock, isValid);
       if (isValid) {
         // add to chain
         newBlock = new BlockModel(block);

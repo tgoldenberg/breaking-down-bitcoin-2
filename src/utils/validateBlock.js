@@ -25,6 +25,7 @@ export async function isBlockValid(block, prevBlock, isGenesis) {
   for (let i = 0; i < txs.length; i++) {
     const isValid = await isTxValid(txs[i]);
     if (!isValid) {
+      console.log('> Invalid tx: ', txs[i]);
       return false;
     }
   }
@@ -36,6 +37,7 @@ export async function isBlockValid(block, prevBlock, isGenesis) {
   }
   // check that previousHash is correct (special case for genesis block)
   if (!isGenesis && block.previousHash !== prevBlock.hash) {
+    console.log('> Incorrect prev hash: ', prevBlock.hash, block);
     return false;
   }
   return true;
