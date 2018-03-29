@@ -67,7 +67,7 @@ export async function handleData(data) {
       index = 0;
       while (blockheaders.length) {
         let peer = peers[index];
-        console.log('> Peer: ', peer);
+        console.log('> Peer: ', peer.ip);
         if (!!peer && peer.client) {
           let header = blockheaders.shift();
           peer.client.write(['REQUESTBLOCK', header].join(DL));
