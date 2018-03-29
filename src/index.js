@@ -35,7 +35,7 @@ app.listen(process.env.PORT || 3000, async function() {
   const valid = await areBlocksValid(blocks);
   console.log('> Valid blocks: ', blocks.length, valid);
   if (!valid) {
-    // blocks = await seedBlocks();
+    blocks = await seedBlocks();
   }
   // call SET_INITIAL_BLOCKS
   store.dispatch({ type: 'SET_INITIAL_BLOCKS', blocks });
