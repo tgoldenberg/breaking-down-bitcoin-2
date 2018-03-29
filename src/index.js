@@ -33,10 +33,9 @@ app.listen(process.env.PORT || 3000, async function() {
   let blocks = await BlockModel.find({ });
   // console.log('> Saved blocks: ', blocks);
   const valid = await areBlocksValid(blocks);
-  console.log('> Valid blocks: ', blocks.length);
+  console.log('> Valid blocks: ', blocks.length, valid);
   if (!valid) {
-    blocks = await seedBlocks();
-    console.log('> Blocks: ', blocks);
+    // blocks = await seedBlocks();
   }
   // call SET_INITIAL_BLOCKS
   store.dispatch({ type: 'SET_INITIAL_BLOCKS', blocks });

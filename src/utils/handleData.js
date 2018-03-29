@@ -86,7 +86,6 @@ export async function handleData(data) {
       // validate block and its transactions
       // if is valid, add to MongoDB, update lastBlock
       block = JSON.parse(args[0]);
-      console.log('> Block: ', block);
       // check if we already have it
       savedBlock = await BlockModel.findOne({ hash: block.hash });
       if (savedBlock) {
@@ -99,7 +98,7 @@ export async function handleData(data) {
       }
       // validate block
       let isValid = await isBlockValid(block, lastBlock, false);
-      console.log('> new block - is valid: ', block, lastBlock, isValid);
+      console.log('> new block - is valid: ', block.hash, isValid);
       if (isValid) {
         // add to chain
         newBlock = new BlockModel(block);

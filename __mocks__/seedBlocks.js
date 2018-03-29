@@ -23,7 +23,7 @@ export const myWallet = {
   privateKeyWIF:'5J27e8Y2VqtHJFvmQc3i56GBcXyrtYtaCzNeRyvfCEUkaU12bYc',
 };
 
-const friendWallet = {
+export const friendWallet = {
   privateKey: '206ca46fc50158ebd083830aa770ff3eb0fa4233fc40126fa9b551cc3d924450',
   publicKey: '04152cdb8558c9d36d08e1b431eba2320c3199c1cf9fa9d284732dcdfb054b33e4888a30af5541e06bfb81a7f1638087cff37d09bc00cb831b809b09360cf3384e',
   publicKeyHash: 'da06515123a3c0960a4b7964f4fac433b79e1dc1',

@@ -17,7 +17,7 @@ const GENESIS_TX = {
   ],
   vout: [
     {
-      scriptPubKey: "1GYh21KtrYX5ewZHgKffxwu6WSCGyeAinT",
+      scriptPubKey: '1GYh21KtrYX5ewZHgKffxwu6WSCGyeAinT',
       nValue: 50 * COIN
      }
   ]
@@ -84,9 +84,6 @@ export default class Block {
 
     console.log('> Solving for block nonce...', this.header, this.hash);
     while (parseInt(this.getBlockHash(this.header, nonce), 16) > target) {
-      if (nonce % 1000000 === 0) {
-        console.log('> New nonce: ', nonce, this.getBlockHash(this.header, nonce));
-      }
       nonce++;
     }
     this.setNonce(nonce);
