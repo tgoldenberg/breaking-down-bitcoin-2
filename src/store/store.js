@@ -1,3 +1,5 @@
+import 'colors';
+
 import { createStore } from 'redux';
 import findIndex from 'lodash/findIndex';
 
@@ -110,7 +112,7 @@ store.dispatch = addLoggingToDispatch(store);
 function addLoggingToDispatch(store) {
   const rawDispatch = store.dispatch;
   return (action) => {
-    console.log(`> Action: ${action.type}, (Keys:  ${Object.keys(action).join(', ')})`);
+    console.log(`> Action: ${action.type}, (Keys:  ${Object.keys(action).join(', ')})`.gray);
     const returnValue = rawDispatch(action);
     return returnValue;
   }

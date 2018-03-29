@@ -10,6 +10,7 @@ import { areBlocksValid } from 'utils/validateBlock';
 import { blocks } from '__mocks__/blocks';
 import bodyParser from 'body-parser';
 import { connectToDB } from 'db/connectToDB';
+import find from 'lodash/find';
 import { makeWallet } from 'utils/makeWallet';
 import net from 'net';
 import network from 'network';
@@ -38,6 +39,7 @@ app.listen(process.env.PORT || 3000, async function() {
     console.log('> Blocks: ', blocks);
   }
   // call SET_INITIAL_BLOCKS
+  store.dispatch({ type: 'SET_INITIAL_BLOCKS', blocks });
 
   // get public IP address
   const ipAddr = await getIPAddress();
@@ -53,7 +55,7 @@ app.listen(process.env.PORT || 3000, async function() {
   const channel = pusher.subscribe('presence-node-coin');
 
   channel.bind('pusher:subscription_succeeded', async (members) => {
-    console.log('> pusher:subscription_succeeded: ', members);
+    console.log('> pusher:subscription_succeeded: '.gray, members);
     let peers = [ ];
     channel.members.each(({ id }) => {
       if (id !== ipAddr) {
@@ -70,7 +72,7 @@ app.listen(process.env.PORT || 3000, async function() {
 
   // MEMBER REMOVED
   channel.bind('pusher:member_removed', function(member) {
-    console.log('> pusher:member_removed: ', member);
+    console.log('> pusher:member_removed: '.gray, member);
     let allPeers = store.getState().allPeers;
     let newAllPeers = [ ];
     allPeers.forEach(peer => {
@@ -83,7 +85,7 @@ app.listen(process.env.PORT || 3000, async function() {
 
   // MEMBER ADDED
   channel.bind('pusher:member_added', function(member) {
-    console.log('> pusher:member_added: ', member);
+    console.log('> pusher:member_added: '.gray, member);
     let allPeers = store.getState().allPeers;
     allPeers.push({ ip: member.id, connected: false, client: null, synced: false });
     store.dispatch({ type: 'SET_PEERS', allPeers });
@@ -106,7 +108,7 @@ app.listen(process.env.PORT || 3000, async function() {
 });
 
 async function handleConnection(conn) {
-  console.log('> New client connection from : ', conn.remoteAddress, conn.remotePort);
+  console.log('> New client connection from : '.blue, conn.remoteAddress, conn.remotePort);
   conn.setEncoding('utf8');
   const ctx = { client: conn, isServer: true, ip: conn.remoteAddress };
   store.dispatch({ type: 'CONNECT_PEER', client: conn, ip: conn.remoteAddress, port: conn.remotePort });
@@ -118,13 +120,14 @@ async function connectWithPeer(ip, port) {
   const client = new net.Socket();
 
   client.connect(port, ip, () => {
-    console.log('> Connected to peer: ', ip, port);
+    console.log('> Connected to peer: '.blue, ip, port);
     store.dispatch({ type: 'CONNECT_PEER', ip, client, port });
 
     let lastBlock = store.getState().lastBlock;
     client.write(['VERSION', '1', lastBlock.hash].join(DL));
   });
   const ctx = { client, isServer: false, ip };
+  client.setEncoding('utf8');
   client.on('data', handleData.bind(ctx));
   client.on('error', (err) => console.warn(err));
 }
